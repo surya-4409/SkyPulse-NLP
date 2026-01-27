@@ -1,6 +1,4 @@
 
-
-```markdown
 # ✈️ SkyPulse: Airline Sentiment & Topic Analysis
 
 ## 📌 Project Overview
@@ -90,6 +88,3 @@ Open your browser and navigate to: [http://localhost:8501](https://www.google.co
 * [x] LDA Topic Modeling & Visualization (`src/topic_model.py`)
 * [x] Interactive Streamlit Dashboard (`app.py`)
 
-```
-
----
