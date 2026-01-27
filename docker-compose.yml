@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: nlp_dashboard
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data      # Mount data directory
+      - ./output:/app/output  # Mount output directory to persist results
+      - ./src:/app/src        # Mount src for easier development
+      - ./app.py:/app/app.py  # Mount app.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
