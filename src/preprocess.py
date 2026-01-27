@@ -44,8 +44,11 @@ def clean_text(text):
 
 def main():
     print("Loading data...")
-    # Define paths
-    input_path = os.path.join('data', 'tweets.csv') # Ensure your file is named tweets.csv
+    # Define paths with check for capitalization (Tweets.csv vs tweets.csv)
+    input_path = os.path.join('data', 'Tweets.csv') 
+    if not os.path.exists(input_path):
+        input_path = os.path.join('data', 'tweets.csv')
+    
     output_path = os.path.join('output', 'preprocessed_data.csv')
     
     # Check if data exists
@@ -70,6 +73,9 @@ def main():
     final_df = df[['tweet_id', 'cleaned_text', 'airline_sentiment']] 
     # Note: We keep 'airline_sentiment' because we need it for training in Step 3!
     
+    # Ensure output directory exists
+    os.makedirs('output', exist_ok=True)
+
     # Save to CSV
     final_df.to_csv(output_path, index=False)
     print(f"Success! Preprocessed data saved to {output_path}")

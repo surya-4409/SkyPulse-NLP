@@ -27,6 +27,9 @@ def main():
     lda_model = LatentDirichletAllocation(n_components=5, random_state=42)
     lda_model.fit(dtm)
     
+    # Ensure output directory exists
+    os.makedirs('output', exist_ok=True)
+
     # Save the model
     with open(os.path.join('output', 'lda_model.pkl'), 'wb') as f:
         pickle.dump(lda_model, f)

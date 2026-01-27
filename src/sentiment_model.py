@@ -35,6 +35,9 @@ def main():
     X_train_tfidf = vectorizer.fit_transform(X_train)
     X_test_tfidf = vectorizer.transform(X_test)
     
+    # Ensure output directory exists
+    os.makedirs('output', exist_ok=True)
+
     # Save the vectorizer (Requirement: output/tfidf_vectorizer.pkl)
     with open(os.path.join('output', 'tfidf_vectorizer.pkl'), 'wb') as f:
         pickle.dump(vectorizer, f)
