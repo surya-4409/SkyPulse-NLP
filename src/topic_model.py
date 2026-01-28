@@ -9,32 +9,33 @@ import pyLDAvis.sklearn
 
 def main():
     print("Loading preprocessed data for Topic Modeling...")
-    input_path = os.path.join('output', 'preprocessed_data.csv')
     
+    # --- PATH FIX ---
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_dir)
+    
+    input_path = os.path.join(project_root, 'output', 'preprocessed_data.csv')
+    output_dir = os.path.join(project_root, 'output')
+    os.makedirs(output_dir, exist_ok=True)
+    # ----------------
+
     if not os.path.exists(input_path):
         raise FileNotFoundError(f"File not found: {input_path}")
         
     df = pd.read_csv(input_path)
     df = df.dropna(subset=['cleaned_text'])
     
-    # 1. Vectorization (Bag of Words)
     print("Vectorizing text...")
     vectorizer = CountVectorizer(max_features=5000, max_df=0.9, min_df=2)
     dtm = vectorizer.fit_transform(df['cleaned_text'])
     
-    # 2. Train LDA Model
     print("Training LDA model (this may take a minute)...")
     lda_model = LatentDirichletAllocation(n_components=5, random_state=42)
     lda_model.fit(dtm)
     
-    # Ensure output directory exists
-    os.makedirs('output', exist_ok=True)
-
-    # Save the model
-    with open(os.path.join('output', 'lda_model.pkl'), 'wb') as f:
+    with open(os.path.join(output_dir, 'lda_model.pkl'), 'wb') as f:
         pickle.dump(lda_model, f)
         
-    # 3. Extract Topics
     print("Extracting top words per topic...")
     topics_data = {}
     feature_names = vectorizer.get_feature_names_out()
@@ -44,25 +45,19 @@ def main():
         top_words = [feature_names[i] for i in top_words_indices]
         topics_data[f"topic_{index}"] = top_words
         
-    # Save topics
-    with open(os.path.join('output', 'topics.json'), 'w') as f:
+    with open(os.path.join(output_dir, 'topics.json'), 'w') as f:
         json.dump(topics_data, f, indent=4)
         
-    # 4. Generate Visualization
     print("Generating interactive visualization...")
-    
-    # --- FIX: Monkey patch the vectorizer to support pyLDAvis ---
-    # This aliases the new method name back to the old one pyLDAvis expects
+    # Monkey patch for pyLDAvis compatibility
     vectorizer.get_feature_names = vectorizer.get_feature_names_out
-    # ------------------------------------------------------------
     
     panel = pyLDAvis.sklearn.prepare(lda_model, dtm, vectorizer, mds='tsne')
     
-    # Save visualization
-    output_html = os.path.join('output', 'lda_visualization.html')
+    output_html = os.path.join(output_dir, 'lda_visualization.html')
     pyLDAvis.save_html(panel, output_html)
     
-    print("Success! Topic model and visualization saved to output/ folder.")
+    print("Success! Topic model and visualization saved.")
 
 if __name__ == "__main__":
     main()
