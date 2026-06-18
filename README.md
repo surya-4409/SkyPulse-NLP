@@ -1,5 +1,5 @@
 
-# ✈️ SkyPulse: Airline Sentiment & Topic Analysis
+# ✈️ SkyPulse: Airline Sentiment & Topic Analysis  
 
 ## 📌 Project Overview
 SkyPulse is a comprehensive Natural Language Processing (NLP) pipeline designed to analyze public sentiment towards US Airlines. The application processes raw tweets to classify sentiment (Positive, Negative, Neutral) and utilizes Latent Dirichlet Allocation (LDA) to discover underlying topics of conversation, such as baggage issues or flight delays.
